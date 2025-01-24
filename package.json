@@ -15,6 +15,7 @@
     "date-fns": "^3.6.0",
     "file-saver": "^2.0.5",
     "ics": "^3.7.6",
+    "lucide-react": "^0.474.0",
     "react": "^18.2.0",
     "react-datepicker": "^7.1.0",
     "react-dom": "^18.2.0",

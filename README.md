@@ -27,6 +27,6 @@ If you have any questions, feedback, or suggestions, please contact us:
 
 - Email: shoibal.not@gmail.com
 - Phone: 1-800-123-4567
-- Website: [https://funny-cendol-99e679.netlify.app](https://funny-cendol-99e679.netlify.app)
+- Website: [https://colonoready.vercel.app/](https://colonoready.vercel.app/)
 
 We're here to support you on your colonoscopy prep journey!

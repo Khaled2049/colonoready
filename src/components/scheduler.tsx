@@ -1,15 +1,14 @@
-import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { AlertCircle } from "lucide-react";
 
 const FormComponent = () => {
   const { control, handleSubmit } = useForm();
   const navigate = useNavigate();
-  const [sendToEmail, setSendToEmail] = useState(false);
   const onSubmit = (data: any) => {
-    const { date, time, option, email } = data;
+    const { date, time, option } = data;
 
     if (date && time) {
       const formattedDate = date ? date.toISOString() : null;
@@ -17,11 +16,11 @@ const FormComponent = () => {
 
       if (option === "Trilyte") {
         navigate("/trilyte", {
-          state: { date: formattedDate, time: formattedTime, option, email },
+          state: { date: formattedDate, time: formattedTime, option },
         });
       } else if (option === "Gatorade/Miralax") {
         navigate("/gatorade-miralax", {
-          state: { date: formattedDate, time: formattedTime, option, email },
+          state: { date: formattedDate, time: formattedTime, option },
         });
       }
     } else {
@@ -30,152 +29,162 @@ const FormComponent = () => {
   };
 
   return (
-    <div>
-      <h1 className="text-2xl font-semibold text-center mb-4">
-        Colonoscopy Calendar Event Creator
+    <div className="max-w-2xl mx-auto p-6">
+      <h1
+        className="text-3xl font-bold text-gray-900 text-center mb-8"
+        id="form-title"
+      >
+        Colonoscopy Event Creator
       </h1>
+
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className=" mx-auto my-8 p-6 bg-lavender rounded-lg"
+        className="space-y-8 bg-lavender rounded-xl shadow-lg p-8"
+        aria-labelledby="form-title"
       >
-        <div className="mb-4">
+        {/* Date Selection */}
+        <div className="space-y-2">
           <label
             htmlFor="date"
-            className="block text-gray-700 font-medium mb-2"
+            className="block text-lg font-medium text-gray-700"
           >
-            Select Date
+            Procedure Date
           </label>
-          <Controller
-            control={control}
-            name="date"
-            render={({ field }) => (
-              <DatePicker
-                {...field}
-                selected={field.value}
-                onChange={(date) => field.onChange(date)}
-                placeholderText="MM/DD/YYYY"
-                dateFormat="MM/dd/yyyy"
-                id="date"
-                className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            )}
-          />
+          <div className="relative">
+            <Controller
+              control={control}
+              name="date"
+              render={({ field, fieldState: { error } }) => (
+                <>
+                  <DatePicker
+                    {...field}
+                    selected={field.value}
+                    onChange={(date) => field.onChange(date)}
+                    placeholderText="Select date"
+                    dateFormat="MMMM d, yyyy"
+                    id="date"
+                    aria-describedby={error ? "date-error" : undefined}
+                    className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    autoComplete="off"
+                  />
+                  {error && (
+                    <div
+                      id="date-error"
+                      className="mt-2 flex items-center text-red-600"
+                      role="alert"
+                    >
+                      <AlertCircle className="w-4 h-4 mr-2" />
+                      <span className="text-sm">{error.message}</span>
+                    </div>
+                  )}
+                </>
+              )}
+            />
+          </div>
         </div>
-        <div className="mb-4">
+
+        {/* Time Selection */}
+        <div className="space-y-2">
           <label
             htmlFor="time"
-            className="block text-gray-700 font-medium mb-2"
+            className="block text-lg font-medium text-gray-700"
           >
-            Select Time
+            Procedure Time
           </label>
-          <Controller
-            control={control}
-            name="time"
-            render={({ field }) => (
-              <DatePicker
-                {...field}
-                selected={field.value}
-                onChange={(time) => field.onChange(time)}
-                showTimeSelect
-                showTimeSelectOnly
-                timeIntervals={15}
-                timeCaption="Time"
-                dateFormat="h:mm aa"
-                placeholderText="hh:mm aa"
-                id="time"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            )}
-          />
+          <div className="relative">
+            <Controller
+              control={control}
+              name="time"
+              render={({ field, fieldState: { error } }) => (
+                <>
+                  <DatePicker
+                    {...field}
+                    selected={field.value}
+                    onChange={(time) => field.onChange(time)}
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={15}
+                    timeCaption="Time"
+                    dateFormat="h:mm aa"
+                    placeholderText="Select time"
+                    id="time"
+                    aria-describedby={error ? "time-error" : undefined}
+                    className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    autoComplete="off"
+                  />
+                  {error && (
+                    <div
+                      id="time-error"
+                      className="mt-2 flex items-center text-red-600"
+                      role="alert"
+                    >
+                      <AlertCircle className="w-4 h-4 mr-2" />
+                      <span className="text-sm">{error.message}</span>
+                    </div>
+                  )}
+                </>
+              )}
+            />
+          </div>
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">
-            Select Option
-          </label>
-          <div className="flex items-center mb-2">
+
+        {/* Preparation Option */}
+        <fieldset className="space-y-4">
+          <legend className="text-lg font-medium text-gray-700 mb-4">
+            Preparation Method
+          </legend>
+          <div className="space-y-4">
             <Controller
               control={control}
               name="option"
               defaultValue="Trilyte"
               render={({ field }) => (
                 <>
-                  <input
-                    {...field}
-                    type="radio"
-                    id="trilyte"
-                    value="Trilyte"
-                    checked={field.value === "Trilyte"}
-                    onChange={() => field.onChange("Trilyte")}
-                    className="mr-2"
-                  />
-                  <label htmlFor="trilyte" className="text-gray-700">
-                    Trilyte
-                  </label>
-                </>
-              )}
-            />
-          </div>
-          <div className="flex items-center">
-            <Controller
-              control={control}
-              name="option"
-              render={({ field }) => (
-                <>
-                  <input
-                    {...field}
-                    type="radio"
-                    id="gatoradeMiralax"
-                    value="Gatorade/Miralax"
-                    checked={field.value === "Gatorade/Miralax"}
-                    onChange={() => field.onChange("Gatorade/Miralax")}
-                    className="mr-2"
-                  />
-                  <label htmlFor="gatoradeMiralax" className="text-gray-700">
-                    Gatorade/Miralax
-                  </label>
-                </>
-              )}
-            />
-          </div>
-          <div className="flex items-center mt-4">
-            <input
-              type="checkbox"
-              id="sendToEmail"
-              checked={sendToEmail}
-              onChange={() => setSendToEmail(!sendToEmail)}
-              className="mr-2"
-            />
-            <label htmlFor="sendToEmail" className="text-gray-700">
-              Send to email address
-            </label>
-          </div>
-          {sendToEmail && (
-            <div className="mt-4">
-              <Controller
-                control={control}
-                name="email"
-                rules={{ required: sendToEmail }}
-                render={({ field }) => (
-                  <>
-                    <label htmlFor="email" className="text-gray-700">
-                      Email Address
-                    </label>
+                  <div className="relative flex items-center">
                     <input
                       {...field}
-                      type="email"
-                      id="email"
-                      className="border border-gray-300 rounded p-2 mt-2 w-full"
+                      type="radio"
+                      id="trilyte"
+                      value="Trilyte"
+                      checked={field.value === "Trilyte"}
+                      onChange={() => field.onChange("Trilyte")}
+                      className="w-5 h-5 text-blue-500 focus:ring-blue-500 focus:ring-2 border-gray-300"
                     />
-                  </>
-                )}
-              />
-            </div>
-          )}
-        </div>
-        <div className="flex items-center justify-between">
+                    <label
+                      htmlFor="trilyte"
+                      className="ml-3 text-gray-700 text-lg cursor-pointer"
+                    >
+                      Trilyte
+                    </label>
+                  </div>
+                  <div className="relative flex items-center">
+                    <input
+                      {...field}
+                      type="radio"
+                      id="gatoradeMiralax"
+                      value="Gatorade/Miralax"
+                      checked={field.value === "Gatorade/Miralax"}
+                      onChange={() => field.onChange("Gatorade/Miralax")}
+                      className="w-5 h-5 text-blue-500 focus:ring-blue-500 focus:ring-2 border-gray-300"
+                    />
+                    <label
+                      htmlFor="gatoradeMiralax"
+                      className="ml-3 text-gray-700 text-lg cursor-pointer"
+                    >
+                      Gatorade/Miralax
+                    </label>
+                  </div>
+                </>
+              )}
+            />
+          </div>
+        </fieldset>
+
+        {/* Submit Button */}
+        <div className="pt-4">
           <button
             type="submit"
-            className="bg-indigo-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full bg-blue-500 text-white py-4 px-6 rounded-lg font-medium text-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
           >
             Generate Schedule
           </button>

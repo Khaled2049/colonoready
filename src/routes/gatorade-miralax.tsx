@@ -57,19 +57,28 @@ const GatoradeMiralax = () => {
   }, [date, time]);
 
   return (
-    <div className="max-w-md mx-auto my-8 p-6 ">
-      <h1 className="text-2xl font-bold mb-4">Gatorade/ Miralax Schedule</h1>
+    <div className="max-w-md mx-auto p-6 bg-blue-100">
+      <h1 className="text-3xl text-center font-bold mb-4">
+        Gatorade/ Miralax Schedule
+      </h1>
       <button
         onClick={() => exportToICS(dates)}
-        className="mt-4 bg-indigo-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full mt-4 bg-indigo-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         Export to Calendar
+      </button>
+      {/* Go back/ reschedule */}
+      <button
+        onClick={() => window.history.back()}
+        className="w-full mt-4 bg-red-400 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500"
+      >
+        back
       </button>
 
       <div className="space-y-2">
         {dates?.twoWeeksPrior && (
-          <div className="max-w-lg mx-auto my-8 p-4 bg-lavender shadow-lg rounded-lg">
-            <h1 className="text-2xl font-bold mb-4">
+          <div className="max-w-lg mx-auto mt-8 p-4 bg-lavender shadow-lg rounded-lg">
+            <h1 className="text-2xl font-bold">
               <strong>2 Weeks Prior</strong> <br />
               <span className="text-sm">{dates.twoWeeksPrior}</span>
             </h1>
@@ -146,7 +155,7 @@ const GatoradeMiralax = () => {
         )}
 
         {dates?.sixHoursPrior && (
-          <div className="max-w-lg mx-auto my-8 p-4 bg-lavender shadow-lg rounded-lg">
+          <div className="max-w-lg mx-auto my-8 p-4 bg-lavender rounded-lg">
             <h1 className="text-2xl font-bold mb-4">
               <strong>6 Hours Prior</strong> <br />
               <span className="text-sm">{dates.sixHoursPrior}</span>
@@ -182,7 +191,7 @@ const GatoradeMiralax = () => {
         {dates?.oneDayPrior && (
           <div className="max-w-lg mx-auto my-8 p-4 bg-lavender shadow-lg rounded-lg">
             <h1 className="text-2xl font-bold mb-4">
-              <strong>Day Before Procedure:</strong> <br />{" "}
+              <strong>Day Before Procedure</strong> <br />{" "}
               <span className="text-sm">{dates.oneDayPrior}</span>
             </h1>
             <ul className="list-disc list-inside space-y-2">
@@ -233,7 +242,7 @@ const GatoradeMiralax = () => {
         )}
 
         {dates?.fourHoursPrior && (
-          <div className="max-w-lg mx-auto my-8 p-4 bg-lavender text-center shadow-lg rounded-lg">
+          <div className="max-w-lg mx-auto my-8 p-4 bg-lavender text-center rounded-lg">
             <h1 className="text-2xl font-bold mb-4">
               4 hours prior to procedure <br />
               <span className="text-sm">{dates.fourHoursPrior}</span>
@@ -244,6 +253,12 @@ const GatoradeMiralax = () => {
           </div>
         )}
       </div>
+      <button
+        onClick={() => exportToICS(dates)}
+        className="w-full mt-4 bg-indigo-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        Export to Calendar
+      </button>
     </div>
   );
 };

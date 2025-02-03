@@ -31,9 +31,8 @@ const calculateDates = (procedureDate: Date): Dates => {
 
 const Trilyte = () => {
   const { state } = useLocation();
-  const { date, time, email } = state || {};
+  const { date, time } = state || {};
   const [dates, setDates] = useState<Dates | null>(null);
-  console.log("Email won't be sent yet", email);
   useEffect(() => {
     if (date && time) {
       const selectedDate = new Date(date);
@@ -132,15 +131,14 @@ const Trilyte = () => {
               <strong>3 Days Prior</strong> <br />
               <span className="text-sm">{dates.threeDaysPrior} 6:00 AM</span>
             </h1>
-            <p>
-              <ul className="list-disc list-inside space-y-2">
-                <li>
-                  Start a low fiber diet (no fruits, vegetables, grains, cereal
-                  or oatmeal)
-                </li>
-                <li>Stop any fiber supplement or iron</li>
-              </ul>
-            </p>
+
+            <ul className="list-disc list-inside space-y-2">
+              <li>
+                Start a low fiber diet (no fruits, vegetables, grains, cereal or
+                oatmeal)
+              </li>
+              <li>Stop any fiber supplement or iron</li>
+            </ul>
           </div>
         )}
 

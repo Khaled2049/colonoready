@@ -1,88 +1,86 @@
-import { createEvents, EventAttributes } from "ics";
-import { parse } from "date-fns";
+import { format } from "date-fns";
 import { saveAs } from "file-saver";
-const convertToDateArray = (
-  dateStr: string
-): [number, number, number, number, number] => {
-  const parsedDate = parse(dateStr, "MM/dd/yyyy h:mm aa", new Date());
+const convertToDateArray = (dateString: any) => {
+  const date = new Date(dateString);
   return [
-    parsedDate.getFullYear(),
-    parsedDate.getMonth() + 1,
-    parsedDate.getDate(),
-    parsedDate.getHours(),
-    parsedDate.getMinutes(),
+    date.getFullYear(),
+    date.getMonth() + 1,
+    date.getDate(),
+    date.getHours() || 0,
+    date.getMinutes() || 0,
   ];
 };
 
+const formatDateToICS = (dateArray: any) => {
+  return format(
+    new Date(
+      dateArray[0],
+      dateArray[1] - 1,
+      dateArray[2],
+      dateArray[3],
+      dateArray[4]
+    ),
+    "yyyyMMdd'T'HHmmss'Z'"
+  );
+};
 export const exportToICS = (dates: any) => {
-  if (!dates) return;
-
-  const events: EventAttributes[] = [
+  const events = [
     {
       start: convertToDateArray(dates.twoWeeksPrior),
-      duration: { hours: 1, minutes: 0 },
       title: "Two Weeks Prior",
       description: "Reminder for two weeks prior to the procedure",
     },
     {
       start: convertToDateArray(dates.sixHoursPrior),
-      duration: { hours: 1, minutes: 0 },
       title: "Six Hours Prior",
       description: "Reminder for six hours prior to the procedure",
     },
     {
       start: convertToDateArray(dates.fourHoursPrior),
-      duration: { hours: 1, minutes: 0 },
       title: "Four Hours Prior",
       description: "Reminder for four hours prior to the procedure",
     },
     {
       start: convertToDateArray(dates.fiveDaysPrior),
-      duration: { hours: 1, minutes: 0 },
       title: "Five Days Prior",
       description: "Reminder for five days prior to the procedure",
     },
     {
       start: convertToDateArray(dates.fortyEightHoursPrior),
-      duration: { hours: 1, minutes: 0 },
       title: "48 Hours Prior",
       description: "Reminder for 48 hours prior to the procedure",
     },
     {
       start: convertToDateArray(dates.sevenDaysPrior),
-      duration: { hours: 1, minutes: 0 },
       title: "Seven Days Prior",
       description: "Reminder for seven days prior to the procedure",
     },
     {
       start: convertToDateArray(dates.threeDaysPrior),
-      duration: { hours: 1, minutes: 0 },
       title: "Three Days Prior",
       description: "Reminder for three days prior to the procedure",
     },
     {
       start: convertToDateArray(dates.oneDayPrior),
-      duration: { hours: 1, minutes: 0 },
       title: "One Day Prior",
       description: "Reminder for one day prior to the procedure",
     },
     {
       start: convertToDateArray(dates.dayOfProcedure),
-      duration: { hours: 1, minutes: 0 },
       title: "Day of Procedure",
       description: "Reminder for the day of the procedure",
     },
   ];
 
-  createEvents(events, (error, value) => {
-    if (error) {
-      console.log(error);
-      return;
-    }
+  let icsContent = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Your App//EN";
 
-    const blob = new Blob([value], {
-      type: "text/calendar;charset=utf-8",
-    });
-    saveAs(blob, "schedule.ics");
+  events.forEach((event) => {
+    const start = formatDateToICS(event.start);
+    icsContent += `\nBEGIN:VEVENT\nSUMMARY:${event.title}\nDESCRIPTION:${event.description}\nDTSTART:${start}\nDURATION:PT1H\nEND:VEVENT`;
   });
+
+  icsContent += "\nEND:VCALENDAR";
+
+  const blob = new Blob([icsContent], { type: "text/calendar" });
+  saveAs(blob, "events.ics");
 };

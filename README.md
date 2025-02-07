@@ -30,6 +30,3 @@ If you have any questions, feedback, or suggestions, please contact us:
 - Website: [https://colonoready.vercel.app/](https://colonoready.vercel.app/)
 
 We're here to support you on your colonoscopy prep journey!
-
-# Scan to visit:
-![Colonoready Vercel App](public/colonoready-vercel-app.png)

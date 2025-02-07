@@ -126,6 +126,7 @@ export const exportToICS = (
   scheduleType: "gatorade-miralax" | "trilyte" = "gatorade-miralax"
 ) => {
   const eventDescriptions = getEventDescriptions(scheduleType);
+  const uid = uuidv4(); // Generate a unique UID for the recurring event
 
   let icsContent = [
     "BEGIN:VCALENDAR",
@@ -135,26 +136,30 @@ export const exportToICS = (
     "METHOD:PUBLISH",
   ].join("\n");
 
-  // Create individual events for each date
-  Object.entries(dates).forEach(([key, value]) => {
-    const eventInfo = eventDescriptions[key as keyof typeof eventDescriptions];
-    if (!eventInfo) return;
+  const firstDateKey = Object.keys(dates)[0];
+  if (!firstDateKey) return; // If no dates, exit function
 
-    const event = [
-      "BEGIN:VEVENT",
-      `UID:${uuidv4()}`, // Each event gets a unique ID
-      `SUMMARY:${eventInfo.title}`,
-      `DESCRIPTION:${eventInfo.description}`,
-      `DTSTAMP:${formatDateToICS(convertToDateArray(value))}`,
-      `DTSTART:${formatDateToICS(convertToDateArray(value))}`,
-      "DURATION:PT1H",
-      "END:VEVENT",
-    ].join("\n");
+  const eventInfo =
+    eventDescriptions[firstDateKey as keyof typeof eventDescriptions];
+  if (!eventInfo) return;
 
-    icsContent += `\n${event}`;
-  });
+  const rdates = Object.values(dates)
+    .map((value) => formatDateToICS(convertToDateArray(value)))
+    .join(",");
 
-  icsContent += "\nEND:VCALENDAR";
+  const recurringEvent = [
+    "BEGIN:VEVENT",
+    `UID:${uid}`,
+    `SUMMARY:${eventInfo.title}`,
+    `DESCRIPTION:${eventInfo.description}`,
+    `DTSTAMP:${formatDateToICS(convertToDateArray(dates[firstDateKey]))}`,
+    `DTSTART:${formatDateToICS(convertToDateArray(dates[firstDateKey]))}`,
+    "DURATION:PT1H",
+    `RDATE;TZID=UTC:${rdates}`, // Defines specific recurrence dates
+    "END:VEVENT",
+  ].join("\n");
+
+  icsContent += `\n${recurringEvent}\nEND:VCALENDAR`;
 
   const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
   saveAs(blob, `${scheduleType}_schedule.ics`);

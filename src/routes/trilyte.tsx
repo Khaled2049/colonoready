@@ -18,15 +18,18 @@ interface Dates {
 
 const calculateDates = (procedureDate: Date): Dates => {
   return {
-    twoWeeksPrior: format(subWeeks(procedureDate, 2), "MM/dd/yyyy"),
+    twoWeeksPrior: format(subWeeks(procedureDate, 2), "MM/dd/yyyy h:mm aa"),
     sixHoursPrior: format(subHours(procedureDate, 6), "MM/dd/yyyy h:mm aa"),
     fourHoursPrior: format(subHours(procedureDate, 4), "MM/dd/yyyy h:mm aa"),
-    fiveDaysPrior: format(subDays(procedureDate, 5), "MM/dd/yyyy"),
-    fortyEightHoursPrior: format(subDays(procedureDate, 2), "MM/dd/yyyy"),
-    sevenDaysPrior: format(subDays(procedureDate, 7), "MM/dd/yyyy"),
-    threeDaysPrior: format(subDays(procedureDate, 3), "MM/dd/yyyy "),
-    oneDayPrior: format(subDays(procedureDate, 1), "MM/dd/yyyy"),
-    dayOfProcedure: format(procedureDate, "MM/dd/yyyy"),
+    fiveDaysPrior: format(subDays(procedureDate, 5), "MM/dd/yyyy h:mm aa"),
+    fortyEightHoursPrior: format(
+      subDays(procedureDate, 2),
+      "MM/dd/yyyy h:mm aa"
+    ),
+    sevenDaysPrior: format(subDays(procedureDate, 7), "MM/dd/yyyy h:mm aa"),
+    threeDaysPrior: format(subDays(procedureDate, 3), "MM/dd/yyyy h:mm aa"),
+    oneDayPrior: format(subDays(procedureDate, 1), "MM/dd/yyyy h:mm aa"),
+    dayOfProcedure: format(procedureDate, "MM/dd/yyyy h:mm aa"),
   };
 };
 
@@ -153,7 +156,7 @@ const Trilyte = () => {
               <h2 className="text-xl md:text-2xl font-bold mb-4">
                 <strong>2 Weeks Prior</strong> <br />
                 <span className="text-sm md:text-base">
-                  {dates.twoWeeksPrior} 6:00 AM
+                  {dates.twoWeeksPrior}
                 </span>
               </h2>
               <p className="text-sm md:text-base">
@@ -169,7 +172,7 @@ const Trilyte = () => {
               <h2 className="text-xl md:text-2xl font-bold mb-4">
                 <strong>7 Days Prior</strong> <br />
                 <span className="text-sm md:text-base">
-                  {dates.sevenDaysPrior} 6:00 AM
+                  {dates.sevenDaysPrior}
                 </span>
               </h2>
               <ul className="list-disc list-inside space-y-2 text-sm md:text-base">
@@ -190,7 +193,7 @@ const Trilyte = () => {
               <h2 className="text-xl md:text-2xl font-bold mb-4">
                 <strong>5 Days Prior</strong> <br />
                 <span className="text-sm md:text-base">
-                  {dates.fiveDaysPrior} 6:00 AM
+                  {dates.fiveDaysPrior}
                 </span>
               </h2>
               <p className="text-sm md:text-base mb-3">
@@ -214,7 +217,7 @@ const Trilyte = () => {
               <h2 className="text-xl md:text-2xl font-bold mb-4">
                 <strong>3 Days Prior</strong> <br />
                 <span className="text-sm md:text-base">
-                  {dates.threeDaysPrior} 6:00 AM
+                  {dates.threeDaysPrior}
                 </span>
               </h2>
               <ul className="list-disc list-inside space-y-2 text-sm md:text-base">
@@ -232,7 +235,7 @@ const Trilyte = () => {
               <h2 className="text-xl md:text-2xl font-bold mb-4">
                 <strong>48 Hours Prior</strong> <br />
                 <span className="text-sm md:text-base">
-                  {dates.fortyEightHoursPrior} 6:00 AM
+                  {dates.fortyEightHoursPrior}
                 </span>
               </h2>
               <p className="text-sm md:text-base mb-3">
@@ -252,7 +255,7 @@ const Trilyte = () => {
               <h2 className="text-xl md:text-2xl font-bold mb-4">
                 <strong>Day Before Procedure</strong> <br />
                 <span className="text-sm md:text-base">
-                  {dates.oneDayPrior} 6:00 AM
+                  {dates.oneDayPrior}
                 </span>
               </h2>
               <ul className="list-disc list-inside space-y-2 text-sm md:text-base">

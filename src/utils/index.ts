@@ -164,6 +164,7 @@ export const exportToICS = (
   });
 
   icsContent += "\nEND:VCALENDAR";
-
+  const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
+  saveAs(blob, `${scheduleType}_schedule.ics`);
   return icsContent;
 };

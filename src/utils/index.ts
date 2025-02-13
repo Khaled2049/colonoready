@@ -133,18 +133,30 @@ export const exportToICS = (
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
   ].join("\n");
+
   // Create individual events for each date
   Object.entries(dates).forEach(([key, value]) => {
     const eventInfo = eventDescriptions[key as keyof typeof eventDescriptions];
     if (!eventInfo) return;
+
+    const dtstamp = formatDateToICS(convertToDateArray(value));
+
     const event = [
       "BEGIN:VEVENT",
-      `UID:${uuidv4()}`, // Each event gets a unique ID
+      `UID:${uuidv4()}`,
       `SUMMARY:${eventInfo.title}`,
       `DESCRIPTION:${eventInfo.description}`,
-      `DTSTAMP:${formatDateToICS(convertToDateArray(value))}`,
-      `DTSTART:${formatDateToICS(convertToDateArray(value))}`,
+      `DTSTAMP:${dtstamp}`,
+      `DTSTART:${dtstamp}`,
       "DURATION:PT1H",
+
+      // Alarm: Triggers a notification 15 minutes before the event
+      "BEGIN:VALARM",
+      "TRIGGER:-PT15M", // 15 minutes before event
+      "ACTION:DISPLAY",
+      `DESCRIPTION:Reminder: ${eventInfo.title}`,
+      "END:VALARM",
+
       "END:VEVENT",
     ].join("\n");
 
@@ -153,6 +165,5 @@ export const exportToICS = (
 
   icsContent += "\nEND:VCALENDAR";
 
-  const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
-  saveAs(blob, `${scheduleType}_schedule.ics`);
+  return icsContent;
 };

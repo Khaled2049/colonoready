@@ -1,3 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes bounceRight {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(15px);
+    }
+  }
+  
+  .animate-bounce-right {
+    animation: bounceRight 1s infinite;
+  }
+  
+
+
+.logo-heading {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #007BFF; /* Medical blue */
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}

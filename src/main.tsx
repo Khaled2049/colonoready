@@ -7,16 +7,17 @@ import {
   RouteObject,
 } from "react-router-dom";
 import ErrorPage from "./error-page.tsx";
-
-import Root from "./routes/Root.tsx";
-import GatoradeMiralax from "./routes/gatorade-miralax.tsx";
-import Trilyte from "./routes/trilyte.tsx";
+import RootLayout from "./routes/RootLayout.tsx";
+import AppointmentFlow from "./routes/AppointmentFlow";
+import GatoradeMiralax from "./routes/gatorade-miralax";
+import Trilyte from "./routes/trilyte";
 
 const routes: RouteObject[] = [
   {
     path: "/",
-    element: <Root />,
+    element: <RootLayout />,
     errorElement: <ErrorPage />,
+    children: [{ index: true, element: <AppointmentFlow /> }],
   },
   {
     path: "/trilyte",

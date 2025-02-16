@@ -22,13 +22,13 @@ const AppointmentQuestion: React.FC<AppointmentQuestionProps> = ({
       <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm">
         <button
           onClick={onYes}
-          className="flex-1 bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm md:text-base"
+          className="w-full bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm md:text-base"
         >
           Yes
         </button>
         <button
           onClick={onNo}
-          className="w-full mb-6 bg-red-400 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm md:text-base"
+          className="w-full bg-red-400 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm md:text-base"
         >
           No
         </button>

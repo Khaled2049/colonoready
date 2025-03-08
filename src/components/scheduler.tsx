@@ -3,10 +3,19 @@ import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { AlertCircle } from "lucide-react";
+import { Operation } from "../routes/AppointmentFlow"; // Import the Operation interface
 
-const FormComponent = () => {
+interface SchedulerProps {
+  selectedOperation?: Operation | null;
+}
+
+const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
+  // Default to Colonoscopy if no operation is selected
+  const operationName = selectedOperation?.name || "Colonoscopy";
+
   const { control, handleSubmit } = useForm();
   const navigate = useNavigate();
+
   const onSubmit = (data: any) => {
     const { date, time, option } = data;
 
@@ -14,13 +23,35 @@ const FormComponent = () => {
       const formattedDate = date ? date.toISOString() : null;
       const formattedTime = time ? time.toISOString() : null;
 
-      if (option === "Trilyte") {
-        navigate("/trilyte", {
-          state: { date: formattedDate, time: formattedTime, option },
-        });
-      } else if (option === "Gatorade/Miralax") {
-        navigate("/gatorade-miralax", {
-          state: { date: formattedDate, time: formattedTime, option },
+      // Support for different preparation methods based on procedure type
+      if (operationName === "Colonoscopy") {
+        if (option === "Trilyte") {
+          navigate("/trilyte", {
+            state: {
+              date: formattedDate,
+              time: formattedTime,
+              option,
+              procedure: operationName,
+            },
+          });
+        } else if (option === "Gatorade/Miralax") {
+          navigate("/gatorade-miralax", {
+            state: {
+              date: formattedDate,
+              time: formattedTime,
+              option,
+              procedure: operationName,
+            },
+          });
+        }
+      } else {
+        // Generic handler for other procedure types that might be added later
+        navigate("/procedure-scheduled", {
+          state: {
+            date: formattedDate,
+            time: formattedTime,
+            procedure: operationName,
+          },
         });
       }
     } else {
@@ -28,13 +59,16 @@ const FormComponent = () => {
     }
   };
 
+  // Determine if we should show procedure-specific options
+  const showPreparationOptions = operationName === "Colonoscopy";
+
   return (
     <div className="max-w-2xl mx-auto p-6">
       <h1
         className="text-3xl font-bold text-gray-900 text-center mb-8"
         id="form-title"
       >
-        Colonoscopy Event Creator
+        {operationName} Event Creator
       </h1>
 
       <form
@@ -128,57 +162,59 @@ const FormComponent = () => {
           </div>
         </div>
 
-        {/* Preparation Option */}
-        <fieldset className="space-y-4">
-          <legend className="text-lg font-medium text-gray-700 mb-4">
-            Preparation Method
-          </legend>
-          <div className="space-y-4">
-            <Controller
-              control={control}
-              name="option"
-              defaultValue="Trilyte"
-              render={({ field }) => (
-                <>
-                  <div className="relative flex items-center">
-                    <input
-                      {...field}
-                      type="radio"
-                      id="trilyte"
-                      value="Trilyte"
-                      checked={field.value === "Trilyte"}
-                      onChange={() => field.onChange("Trilyte")}
-                      className="w-5 h-5 text-blue-500 focus:ring-blue-500 focus:ring-2 border-gray-300"
-                    />
-                    <label
-                      htmlFor="trilyte"
-                      className="ml-3 text-gray-700 text-lg cursor-pointer"
-                    >
-                      Trilyte
-                    </label>
-                  </div>
-                  <div className="relative flex items-center">
-                    <input
-                      {...field}
-                      type="radio"
-                      id="gatoradeMiralax"
-                      value="Gatorade/Miralax"
-                      checked={field.value === "Gatorade/Miralax"}
-                      onChange={() => field.onChange("Gatorade/Miralax")}
-                      className="w-5 h-5 text-blue-500 focus:ring-blue-500 focus:ring-2 border-gray-300"
-                    />
-                    <label
-                      htmlFor="gatoradeMiralax"
-                      className="ml-3 text-gray-700 text-lg cursor-pointer"
-                    >
-                      Gatorade/Miralax
-                    </label>
-                  </div>
-                </>
-              )}
-            />
-          </div>
-        </fieldset>
+        {/* Preparation Option - Only show for Colonoscopy */}
+        {showPreparationOptions && (
+          <fieldset className="space-y-4">
+            <legend className="text-lg font-medium text-gray-700 mb-4">
+              Preparation Method
+            </legend>
+            <div className="space-y-4">
+              <Controller
+                control={control}
+                name="option"
+                defaultValue="Trilyte"
+                render={({ field }) => (
+                  <>
+                    <div className="relative flex items-center">
+                      <input
+                        {...field}
+                        type="radio"
+                        id="trilyte"
+                        value="Trilyte"
+                        checked={field.value === "Trilyte"}
+                        onChange={() => field.onChange("Trilyte")}
+                        className="w-5 h-5 text-blue-500 focus:ring-blue-500 focus:ring-2 border-gray-300"
+                      />
+                      <label
+                        htmlFor="trilyte"
+                        className="ml-3 text-gray-700 text-lg cursor-pointer"
+                      >
+                        Trilyte
+                      </label>
+                    </div>
+                    <div className="relative flex items-center">
+                      <input
+                        {...field}
+                        type="radio"
+                        id="gatoradeMiralax"
+                        value="Gatorade/Miralax"
+                        checked={field.value === "Gatorade/Miralax"}
+                        onChange={() => field.onChange("Gatorade/Miralax")}
+                        className="w-5 h-5 text-blue-500 focus:ring-blue-500 focus:ring-2 border-gray-300"
+                      />
+                      <label
+                        htmlFor="gatoradeMiralax"
+                        className="ml-3 text-gray-700 text-lg cursor-pointer"
+                      >
+                        Gatorade/Miralax
+                      </label>
+                    </div>
+                  </>
+                )}
+              />
+            </div>
+          </fieldset>
+        )}
 
         {/* Submit Button */}
         <div className="pt-4">
@@ -194,4 +230,4 @@ const FormComponent = () => {
   );
 };
 
-export default FormComponent;
+export default Scheduler;

@@ -4,7 +4,7 @@ import Scheduler from "../components/scheduler";
 
 const Root: React.FC = () => {
   return (
-    <div className="min-h-screen bg-blue-100 flex flex-col items-center justify-center">
+    <div className="min-h-screen bg-bg100 flex flex-col items-center justify-center">
       <Scheduler />
       {/* <ColonoscopyFAQ /> */}
     </div>

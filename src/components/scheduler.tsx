@@ -63,9 +63,9 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
   const showPreparationOptions = operationName === "Colonoscopy";
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="max-w-2xl mx-auto p-6 bg-bg100 min-h-screen">
       <h1
-        className="text-3xl font-bold text-gray-900 text-center mb-8"
+        className="text-3xl font-bold text-text100 text-center mb-8"
         id="form-title"
       >
         {operationName} Event Creator
@@ -73,14 +73,14 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-8 bg-lavender rounded-xl shadow-lg p-8"
+        className="space-y-8 bg-primary200 rounded-xl shadow-lg p-8"
         aria-labelledby="form-title"
       >
         {/* Date Selection */}
         <div className="space-y-2">
           <label
             htmlFor="date"
-            className="block text-lg font-medium text-gray-700"
+            className="block text-lg font-medium text-text100"
           >
             Procedure Date
           </label>
@@ -98,7 +98,7 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
                     dateFormat="MMMM d, yyyy"
                     id="date"
                     aria-describedby={error ? "date-error" : undefined}
-                    className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    className="w-full p-4 bg-bg200 border border-accent200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                     autoComplete="off"
                   />
                   {error && (
@@ -121,7 +121,7 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
         <div className="space-y-2">
           <label
             htmlFor="time"
-            className="block text-lg font-medium text-gray-700"
+            className="block text-lg font-medium text-text100"
           >
             Procedure Time
           </label>
@@ -143,7 +143,7 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
                     placeholderText="Select time"
                     id="time"
                     aria-describedby={error ? "time-error" : undefined}
-                    className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    className="w-full p-4 bg-bg200 border border-accent200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                     autoComplete="off"
                   />
                   {error && (
@@ -165,7 +165,7 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
         {/* Preparation Option - Only show for Colonoscopy */}
         {showPreparationOptions && (
           <fieldset className="space-y-4">
-            <legend className="text-lg font-medium text-gray-700 mb-4">
+            <legend className="text-lg font-medium text-text100 mb-4">
               Preparation Method
             </legend>
             <div className="space-y-4">
@@ -183,11 +183,11 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
                         value="Trilyte"
                         checked={field.value === "Trilyte"}
                         onChange={() => field.onChange("Trilyte")}
-                        className="w-5 h-5 text-blue-500 focus:ring-blue-500 focus:ring-2 border-gray-300"
+                        className="w-5 h-5 text-text100 focus:ring-primary focus:ring-2 border border-accent200"
                       />
                       <label
                         htmlFor="trilyte"
-                        className="ml-3 text-gray-700 text-lg cursor-pointer"
+                        className="ml-3 text-text100 text-lg cursor-pointer"
                       >
                         Trilyte
                       </label>
@@ -200,11 +200,11 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
                         value="Gatorade/Miralax"
                         checked={field.value === "Gatorade/Miralax"}
                         onChange={() => field.onChange("Gatorade/Miralax")}
-                        className="w-5 h-5 text-blue-500 focus:ring-blue-500 focus:ring-2 border-gray-300"
+                        className="w-5 h-5 text-text100 focus:ring-primary focus:ring-2 border border-accent200"
                       />
                       <label
                         htmlFor="gatoradeMiralax"
-                        className="ml-3 text-gray-700 text-lg cursor-pointer"
+                        className="ml-3 text-text100 text-lg cursor-pointer"
                       >
                         Gatorade/Miralax
                       </label>
@@ -220,7 +220,7 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
         <div className="pt-4">
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-4 px-6 rounded-lg font-medium text-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+            className="w-full bg-primary300 text-white py-4 px-6 rounded-lg font-medium text-lg hover:bg-accent200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors"
           >
             Generate Schedule
           </button>

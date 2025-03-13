@@ -14,7 +14,7 @@ const ErrorPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md text-center">
+      <div className="bg-primary100 p-8 rounded-lg shadow-lg max-w-md text-center">
         <h1 className="text-4xl font-bold text-red-600 mb-4">Oops!</h1>
         <p className="text-lg text-gray-700 mb-4">
           Sorry, an unexpected error has occurred.

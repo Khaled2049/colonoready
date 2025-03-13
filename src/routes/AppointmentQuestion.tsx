@@ -16,7 +16,7 @@ const AppointmentQuestion: React.FC<AppointmentQuestionProps> = ({
         <Logo />
       </div>
 
-      <h1 className="text-2xl font-semibold mb-6 text-center text-gray-800">
+      <h1 className="text-2xl font-semibold mb-6 text-center text-text100">
         Have you already scheduled an appointment with OpReady?
       </h1>
       <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm">

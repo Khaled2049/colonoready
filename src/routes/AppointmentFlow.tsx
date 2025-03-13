@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import AppointmentQuestion from "./AppointmentQuestion";
 import YesFlow from "./YesFlow";
 import Scheduler from "../components/scheduler";
-import OperationSelection from "../components/OperationSelection"; // New component we'll create next
+import OperationSelection from "../components/OperationSelection";
 
 // Define the available operations - easy to extend in the future
 export interface Operation {
@@ -50,7 +50,7 @@ const AppointmentFlow: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center bg-bg100 text-text100">
       {step === "question" && (
         <AppointmentQuestion onYes={handleYes} onNo={handleNo} />
       )}

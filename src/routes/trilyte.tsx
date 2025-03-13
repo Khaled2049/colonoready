@@ -66,7 +66,7 @@ const Trilyte = () => {
           display: none !important;
         }
 
-        .bg-blue-100, .bg-lavender, .shadow-lg {
+        .bg-bg100, .bg-bg300, .shadow-lg {
           background: white !important;
           box-shadow: none !important;
           border-radius: 0 !important;
@@ -117,10 +117,10 @@ const Trilyte = () => {
   }, [date, time]);
 
   return (
-    <div className="min-h-screen bg-blue-100 flex items-center justify-center">
+    <div className="min-h-screen bg-bg100 flex items-center justify-center">
       <div
         ref={componentRef}
-        className="w-full max-w-3xl mx-auto p-4 md:p-6 bg-blue-100"
+        className="w-full max-w-3xl mx-auto p-4 md:p-6 bg-bg100"
       >
         <h1 className="text-2xl md:text-3xl text-center font-bold mb-6">
           Trilyte Schedule
@@ -152,7 +152,7 @@ const Trilyte = () => {
 
         <div className="space-y-4 md:space-y-6">
           {dates?.twoWeeksPrior && (
-            <div className="w-full p-4 md:p-6 bg-lavender shadow-lg rounded-lg">
+            <div className="w-full p-4 md:p-6 bg-bg300 shadow-lg rounded-lg">
               <h2 className="text-xl md:text-2xl font-bold mb-4">
                 <strong>2 Weeks Prior</strong> <br />
                 <span className="text-sm md:text-base">
@@ -168,7 +168,7 @@ const Trilyte = () => {
           )}
 
           {dates?.sevenDaysPrior && (
-            <div className="w-full p-4 md:p-6 bg-lavender shadow-lg rounded-lg">
+            <div className="w-full p-4 md:p-6 bg-bg300 shadow-lg rounded-lg">
               <h2 className="text-xl md:text-2xl font-bold mb-4">
                 <strong>7 Days Prior</strong> <br />
                 <span className="text-sm md:text-base">
@@ -189,7 +189,7 @@ const Trilyte = () => {
           )}
 
           {dates?.fiveDaysPrior && (
-            <div className="w-full p-4 md:p-6 bg-lavender shadow-lg rounded-lg">
+            <div className="w-full p-4 md:p-6 bg-bg300 shadow-lg rounded-lg">
               <h2 className="text-xl md:text-2xl font-bold mb-4">
                 <strong>5 Days Prior</strong> <br />
                 <span className="text-sm md:text-base">
@@ -213,7 +213,7 @@ const Trilyte = () => {
           )}
 
           {dates?.threeDaysPrior && (
-            <div className="w-full p-4 md:p-6 bg-lavender shadow-lg rounded-lg">
+            <div className="w-full p-4 md:p-6 bg-bg300 shadow-lg rounded-lg">
               <h2 className="text-xl md:text-2xl font-bold mb-4">
                 <strong>3 Days Prior</strong> <br />
                 <span className="text-sm md:text-base">
@@ -231,7 +231,7 @@ const Trilyte = () => {
           )}
 
           {dates?.fortyEightHoursPrior && (
-            <div className="w-full p-4 md:p-6 bg-lavender shadow-lg rounded-lg">
+            <div className="w-full p-4 md:p-6 bg-bg300 shadow-lg rounded-lg">
               <h2 className="text-xl md:text-2xl font-bold mb-4">
                 <strong>48 Hours Prior</strong> <br />
                 <span className="text-sm md:text-base">
@@ -251,7 +251,7 @@ const Trilyte = () => {
           )}
 
           {dates?.oneDayPrior && (
-            <div className="w-full p-4 md:p-6 bg-lavender shadow-lg rounded-lg">
+            <div className="w-full p-4 md:p-6 bg-bg300 shadow-lg rounded-lg">
               <h2 className="text-xl md:text-2xl font-bold mb-4">
                 <strong>Day Before Procedure</strong> <br />
                 <span className="text-sm md:text-base">
@@ -292,7 +292,7 @@ const Trilyte = () => {
           )}
 
           {dates?.dayOfProcedure && (
-            <div className="w-full p-4 md:p-6 bg-lavender shadow-lg rounded-lg">
+            <div className="w-full p-4 md:p-6 bg-bg300 shadow-lg rounded-lg">
               <h2 className="text-xl md:text-2xl font-bold mb-4">
                 Day of Procedure <br />
                 <span className="text-sm md:text-base">
@@ -304,7 +304,7 @@ const Trilyte = () => {
               </ul>
 
               {dates?.sixHoursPrior && (
-                <div className="mt-4 p-4 bg-lavender/50 rounded-lg">
+                <div className="mt-4 p-4 bg-bg300/50 rounded-lg">
                   <h3 className="text-lg md:text-xl font-bold mb-3">
                     <strong>6 Hours Prior</strong> <br />
                     <span className="text-sm md:text-base">

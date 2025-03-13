@@ -1,8 +1,10 @@
+import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { AlertCircle } from "lucide-react";
+import CalendarNotificationsGuide from "./CalendarNotificationsGuide"; // Import the notifications component
 import { Operation } from "../routes/AppointmentFlow"; // Import the Operation interface
 
 interface SchedulerProps {
@@ -13,6 +15,11 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
   // Default to Colonoscopy if no operation is selected
   const operationName = selectedOperation?.name || "Colonoscopy";
 
+  // Add state to control the visibility of the notifications guide
+  const [showNotificationsGuide, setShowNotificationsGuide] = useState(false);
+  // Store form data to use after notifications guide is completed
+  const [formData, setFormData] = useState<any>(null);
+
   const { control, handleSubmit } = useForm();
   const navigate = useNavigate();
 
@@ -20,47 +27,53 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
     const { date, time, option } = data;
 
     if (date && time) {
-      const formattedDate = date ? date.toISOString() : null;
-      const formattedTime = time ? time.toISOString() : null;
+      // Store the form data for later use
+      setFormData({
+        date: date.toISOString(),
+        time: time.toISOString(),
+        option,
+        procedure: operationName,
+      });
 
-      // Support for different preparation methods based on procedure type
-      if (operationName === "Colonoscopy") {
-        if (option === "Trilyte") {
-          navigate("/trilyte", {
-            state: {
-              date: formattedDate,
-              time: formattedTime,
-              option,
-              procedure: operationName,
-            },
-          });
-        } else if (option === "Gatorade/Miralax") {
-          navigate("/gatorade-miralax", {
-            state: {
-              date: formattedDate,
-              time: formattedTime,
-              option,
-              procedure: operationName,
-            },
-          });
-        }
-      } else {
-        // Generic handler for other procedure types that might be added later
-        navigate("/procedure-scheduled", {
-          state: {
-            date: formattedDate,
-            time: formattedTime,
-            procedure: operationName,
-          },
-        });
-      }
+      // Show the notifications guide
+      setShowNotificationsGuide(true);
     } else {
       alert("Please select a date and time");
     }
   };
 
+  // Handler for when the notifications guide is completed
+  const handleNotificationsComplete = () => {
+    if (formData) {
+      // Navigate to the appropriate page based on the procedure type and option
+      if (operationName === "Colonoscopy") {
+        if (formData.option === "Trilyte") {
+          navigate("/trilyte", { state: formData });
+        } else if (formData.option === "Gatorade/Miralax") {
+          navigate("/gatorade-miralax", { state: formData });
+        }
+      } else {
+        // Generic handler for other procedure types
+        navigate("/procedure-scheduled", {
+          state: {
+            date: formData.date,
+            time: formData.time,
+            procedure: operationName,
+          },
+        });
+      }
+    }
+  };
+
   // Determine if we should show procedure-specific options
   const showPreparationOptions = operationName === "Colonoscopy";
+
+  // If showing notifications guide, render that instead of the form
+  if (showNotificationsGuide) {
+    return (
+      <CalendarNotificationsGuide onComplete={handleNotificationsComplete} />
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-bg100 min-h-screen">

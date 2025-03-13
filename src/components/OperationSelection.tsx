@@ -15,7 +15,7 @@ const OperationSelection: React.FC<OperationSelectionProps> = ({
 }) => {
   return (
     <div className="flex flex-col items-center p-4 bg-bg100 w-full max-w-md mx-auto">
-      <div className="bg-primary200 p-5 rounded-lg shadow-md w-full mb-4 border border-accent100">
+      <div className="bg-bg200 p-5 rounded-lg shadow-md w-full mb-4 border border-primary300">
         <h2 className="text-lg font-semibold text-center text-text100 mb-3">
           Select Procedure Type
         </h2>
@@ -23,7 +23,7 @@ const OperationSelection: React.FC<OperationSelectionProps> = ({
           Please select the type of procedure you would like to schedule
         </p>
 
-        <div className="space-y-3 bg-primary100">
+        <div className="space-y-3 bg-bg200">
           {operations.map((operation) => (
             <button
               key={operation.id}

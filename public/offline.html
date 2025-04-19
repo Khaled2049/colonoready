@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Offline - Endoready</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        padding: 20px;
+        text-align: center;
+        color: #333;
+        background-color: #f8f9fa;
+      }
+      .container {
+        max-width: 500px;
+      }
+      h1 {
+        margin-bottom: 1rem;
+        color: #0056b3;
+      }
+      p {
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+      }
+      .logo {
+        width: 120px;
+        margin-bottom: 2rem;
+      }
+      .retry-button {
+        background-color: #0056b3;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s;
+      }
+      .retry-button:hover {
+        background-color: #003d7a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <img src="/endoready.png" alt="Endoready Logo" class="logo" />
+      <h1>You're currently offline</h1>
+      <p>
+        The Endoready app requires an internet connection to schedule and manage
+        endoscopic procedures. Please check your connection and try again.
+      </p>
+      <button class="retry-button" onclick="window.location.reload()">
+        Try Again
+      </button>
+    </div>
+    <script>
+      // When the user comes back online, automatically refresh
+      window.addEventListener("online", () => {
+        window.location.reload();
+      });
+    </script>
+  </body>
+</html>

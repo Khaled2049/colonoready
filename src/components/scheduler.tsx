@@ -182,68 +182,6 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
                       />
                       <span className="ml-3">Gatorade/Miralax</span>
                     </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        {...field}
-                        value="Flexible Sigmoidoscopy"
-                        checked={field.value === "Flexible Sigmoidoscopy"}
-                        onChange={() =>
-                          field.onChange("Flexible Sigmoidoscopy")
-                        }
-                        className="w-5 h-5"
-                        disabled
-                      />
-                      <span className="ml-3">Flexible Sigmoidoscopy</span>
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        {...field}
-                        value="Ileoscopy"
-                        checked={field.value === "Ileoscopy"}
-                        onChange={() => field.onChange("Ileoscopy")}
-                        className="w-5 h-5"
-                        disabled
-                      />
-                      <span className="ml-3">Ileoscopy</span>
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        {...field}
-                        value="Pouchscopy"
-                        checked={field.value === "Pouchscopy"}
-                        onChange={() => field.onChange("Pouchscopy")}
-                        className="w-5 h-5"
-                        disabled
-                      />
-                      <span className="ml-3">Pouchscopy</span>
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        {...field}
-                        value="ERCP"
-                        checked={field.value === "ERCP"}
-                        onChange={() => field.onChange("ERCP")}
-                        className="w-5 h-5"
-                        disabled
-                      />
-                      <span className="ml-3">ERCP</span>
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        {...field}
-                        value="Endoscopic Ultrasound"
-                        checked={field.value === "Endoscopic Ultrasound"}
-                        onChange={() => field.onChange("Endoscopic Ultrasound")}
-                        className="w-5 h-5"
-                        disabled
-                      />
-                      <span className="ml-3">Endoscopic Ultrasound</span>
-                    </label>
                   </div>
                 )}
               />

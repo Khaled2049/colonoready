@@ -11,7 +11,6 @@ export interface Operation {
   description?: string;
 }
 
-// Initial list of operations - can be expanded easily
 const AVAILABLE_OPERATIONS: Operation[] = [
   {
     id: "colonoscopy",
@@ -20,9 +19,38 @@ const AVAILABLE_OPERATIONS: Operation[] = [
   },
   {
     id: "egd",
-    name: "Egd Prep",
+    name: "EGD",
     description:
       "Upper endoscopy examination of the esophagus, stomach, and duodenum",
+  },
+  {
+    id: "flexible-sigmoidoscopy",
+    name: "Flexible Sigmoidoscopy",
+    description:
+      "Examination of the lower part of the large intestine using a flexible camera.",
+  },
+  {
+    id: "ileoscopy",
+    name: "Ileoscopy",
+    description: "Examination of the ileum.",
+  },
+  {
+    id: "pouchscopy",
+    name: "Pouchscopy",
+    description:
+      "Examination of an ileal pouch-anal anastomosis (J-pouch) created after the surgical removal of the colon.",
+  },
+  {
+    id: "ercp",
+    name: "ERCP",
+    description:
+      "A procedure that combines upper gastrointestinal endoscopy and X-rays to diagnose and treat problems of the bile and pancreatic ducts.",
+  },
+  {
+    id: "endoscopic-ultrasound",
+    name: "Endoscopic Ultrasound",
+    description:
+      "A procedure that combines endoscopy with ultrasound to visualize the layers of the gastrointestinal tract and nearby organs.",
   },
 ];
 

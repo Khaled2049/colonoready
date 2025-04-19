@@ -1,41 +1,15 @@
-import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { format, subWeeks, subHours, subDays } from "date-fns";
-import { exportToICS } from "../utils";
+import dayjs from "dayjs";
+import { calculateDates, Dates, exportToICS } from "../../utils";
 import { useReactToPrint } from "react-to-print";
 
-interface Dates {
-  twoWeeksPrior: string;
-  sixHoursPrior: string;
-  fourHoursPrior: string;
-  fiveDaysPrior: string;
-  fortyEightHoursPrior: string;
-  sevenDaysPrior: string;
-  threeDaysPrior: string;
-  oneDayPrior: string;
-  dayOfProcedure: string;
-}
+import { useAppointment } from "../../contexts/AppointmentContext";
 
-const calculateDates = (procedureDate: Date): Dates => {
-  return {
-    twoWeeksPrior: format(subWeeks(procedureDate, 2), "MM/dd/yyyy h:mm aa"),
-    sixHoursPrior: format(subHours(procedureDate, 6), "MM/dd/yyyy h:mm aa"),
-    fourHoursPrior: format(subHours(procedureDate, 4), "MM/dd/yyyy h:mm aa"),
-    fiveDaysPrior: format(subDays(procedureDate, 5), "MM/dd/yyyy h:mm aa"),
-    fortyEightHoursPrior: format(
-      subDays(procedureDate, 2),
-      "MM/dd/yyyy h:mm aa"
-    ),
-    sevenDaysPrior: format(subDays(procedureDate, 7), "MM/dd/yyyy h:mm aa"),
-    threeDaysPrior: format(subDays(procedureDate, 3), "MM/dd/yyyy h:mm aa"),
-    oneDayPrior: format(subDays(procedureDate, 1), "MM/dd/yyyy h:mm aa"),
-    dayOfProcedure: format(procedureDate, "MM/dd/yyyy h:mm aa"),
-  };
-};
-
-const Trilyte = () => {
-  const { state } = useLocation();
-  const { date, time } = state || {};
+const TrilytePrepPage = () => {
+  const { appointmentDate, appointmentTime, selectedOperation } =
+    useAppointment();
+  const navigate = useNavigate(); // Use navigate hook
   const [dates, setDates] = useState<Dates | null>(null);
   const componentRef = useRef<HTMLDivElement>(null);
 
@@ -98,23 +72,42 @@ const Trilyte = () => {
     `,
   });
   useEffect(() => {
-    if (date && time) {
-      const selectedDate = new Date(date);
-      const selectedTime = new Date(time);
+    // Check if Dayjs objects exist in context
+    if (
+      appointmentDate &&
+      dayjs.isDayjs(appointmentDate) &&
+      appointmentTime &&
+      dayjs.isDayjs(appointmentTime)
+    ) {
+      // Combine Dayjs date and time parts into a single Dayjs object, then convert to JS Date
+      // This assumes appointmentDate and appointmentTime represent the correct local date/time
+      const combinedDayjs = appointmentDate
+        .hour(appointmentTime.hour())
+        .minute(appointmentTime.minute())
+        .second(appointmentTime.second());
 
-      const combinedDateTime = new Date(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth(),
-        selectedDate.getDate(),
-        selectedTime.getUTCHours() - 5,
-        selectedTime.getUTCMinutes(),
-        selectedTime.getUTCSeconds(),
-        selectedTime.getUTCMilliseconds()
-      );
+      const combinedDateTime = combinedDayjs.toDate(); // Convert to standard JS Date
 
       setDates(calculateDates(combinedDateTime));
+    } else {
+      // Handle case where date/time aren't set (e.g., redirect or show error)
+      console.warn(
+        "Appointment date/time not found in context. Redirecting..."
+      );
+      // Optional: Redirect back to an earlier step if data is missing
+      // navigate('/schedule', { replace: true });
+      setDates(null); // Ensure dates are cleared if context data disappears
     }
-  }, [date, time]);
+    // Depend on context values
+  }, [appointmentDate, appointmentTime]);
+
+  const handleBack = () => {
+    navigate(-1); // Use navigate for back action
+  };
+
+  // const handleGoHome = () => {
+  //   navigate("/"); // Navigate to the root/start page
+  // };
 
   return (
     <div className="min-h-screen bg-bg100 flex items-center justify-center">
@@ -122,8 +115,8 @@ const Trilyte = () => {
         ref={componentRef}
         className="w-full max-w-3xl mx-auto p-4 md:p-6 bg-bg100"
       >
-        <h1 className="text-2xl md:text-3xl text-center font-bold mb-6">
-          Trilyte Schedule
+        <h1 className="text-2xl md:text-3xl text-center font-bold mb-6 text-text100">
+          {selectedOperation?.name || "Procedure"} - Trilyte Schedule{" "}
         </h1>
 
         {/* Control buttons at top */}
@@ -143,12 +136,20 @@ const Trilyte = () => {
         </div>
 
         {/* Back button */}
-        <button
-          onClick={() => window.history.back()}
-          className="w-full mb-6 bg-red-400 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm md:text-base"
-        >
-          Back
-        </button>
+        <div className="flex flex-col sm:flex-row gap-2 mb-6">
+          <button
+            onClick={handleBack}
+            className="w-full mb-6 bg-red-400 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm md:text-base" // Consistent style
+          >
+            Back
+          </button>
+          {/* <button
+            onClick={handleGoHome}
+            className="w-full mb-6 bg-red-400 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm md:text-base" // Consistent style
+          >
+            Go Home
+          </button> */}
+        </div>
 
         <div className="space-y-4 md:space-y-6">
           {dates?.twoWeeksPrior && (
@@ -370,4 +371,4 @@ const Trilyte = () => {
   );
 };
 
-export default Trilyte;
+export default TrilytePrepPage;

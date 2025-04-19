@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, subDays, subHours, subWeeks } from "date-fns";
 import { saveAs } from "file-saver";
 import { v4 as uuidv4 } from "uuid";
 
@@ -131,6 +131,35 @@ const getEventDescriptions = (
       },
     };
   }
+};
+
+export interface Dates {
+  twoWeeksPrior: string;
+  sixHoursPrior: string;
+  fourHoursPrior: string;
+  fiveDaysPrior: string;
+  fortyEightHoursPrior: string;
+  sevenDaysPrior: string;
+  threeDaysPrior: string;
+  oneDayPrior: string;
+  dayOfProcedure: string;
+}
+
+export const calculateDates = (procedureDate: Date): Dates => {
+  return {
+    twoWeeksPrior: format(subWeeks(procedureDate, 2), "MM/dd/yyyy h:mm aa"),
+    sixHoursPrior: format(subHours(procedureDate, 6), "MM/dd/yyyy h:mm aa"),
+    fourHoursPrior: format(subHours(procedureDate, 4), "MM/dd/yyyy h:mm aa"),
+    fiveDaysPrior: format(subDays(procedureDate, 5), "MM/dd/yyyy h:mm aa"),
+    fortyEightHoursPrior: format(
+      subDays(procedureDate, 2),
+      "MM/dd/yyyy h:mm aa"
+    ),
+    sevenDaysPrior: format(subDays(procedureDate, 7), "MM/dd/yyyy h:mm aa"),
+    threeDaysPrior: format(subDays(procedureDate, 3), "MM/dd/yyyy h:mm aa"),
+    oneDayPrior: format(subDays(procedureDate, 1), "MM/dd/yyyy h:mm aa"),
+    dayOfProcedure: format(procedureDate, "MM/dd/yyyy h:mm aa"),
+  };
 };
 
 const convertToDateArray = (dateString: any) => {

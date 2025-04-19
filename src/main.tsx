@@ -1,46 +1,23 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./routes"; // Import the router configuration
+import { AppointmentProvider } from "./contexts/AppointmentContext";
 import "./index.css";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  RouteObject,
-} from "react-router-dom";
-import ErrorPage from "./error-page.tsx";
-import RootLayout from "./routes/RootLayout.tsx";
-import AppointmentFlow from "./routes/AppointmentFlow";
-import GatoradeMiralax from "./routes/gatorade-miralax";
-import Trilyte from "./routes/trilyte";
-import EGDPrep from "./routes/egd-prep.tsx";
 
-const routes: RouteObject[] = [
-  {
-    path: "/",
-    element: <RootLayout />,
-    errorElement: <ErrorPage />,
-    children: [{ index: true, element: <AppointmentFlow /> }],
-  },
-  {
-    path: "/trilyte",
-    element: <Trilyte />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/egd-prep",
-    element: <EGDPrep />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/gatorade-miralax",
-    element: <GatoradeMiralax />,
-    errorElement: <ErrorPage />,
-  },
-];
-
-const router = createBrowserRouter(routes);
+// Import MUI Localization (if not already wrapping higher up)
+// You might wrap this around RouterProvider or within RootLayout depending on needs
+// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    {/* <LocalizationProvider dateAdapter={AdapterDayjs}> */}
+    <AppointmentProvider>
+      {" "}
+      {/* Provide context to the entire app */}
+      <RouterProvider router={router} />
+    </AppointmentProvider>
+    {/* </LocalizationProvider> */}
   </React.StrictMode>
 );

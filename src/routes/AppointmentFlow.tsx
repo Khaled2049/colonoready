@@ -18,12 +18,12 @@ const AVAILABLE_OPERATIONS: Operation[] = [
     name: "Colonoscopy",
     description: "Examination of the large intestine using a flexible camera",
   },
-  // Add more operations here in the future
-  // {
-  //   id: "endoscopy",
-  //   name: "Endoscopy",
-  //   description: "Examination of the upper digestive tract"
-  // },
+  {
+    id: "egd",
+    name: "Egd Prep",
+    description:
+      "Upper endoscopy examination of the esophagus, stomach, and duodenum",
+  },
 ];
 
 type Step = "question" | "yes" | "operation-select" | "scheduler";
@@ -36,14 +36,11 @@ const AppointmentFlow: React.FC = () => {
 
   const handleYes = () => setStep("yes");
   const handleBack = () => setStep("question");
-
   const handleNo = () => {
     // When user selects "No", go to operation selection instead of directly to scheduler
     setStep("operation-select");
   };
-
   const handleArrowClick = () => setStep("operation-select");
-
   const handleOperationSelect = (operation: Operation) => {
     setSelectedOperation(operation);
     setStep("scheduler");
@@ -54,9 +51,7 @@ const AppointmentFlow: React.FC = () => {
       {step === "question" && (
         <AppointmentQuestion onYes={handleYes} onNo={handleNo} />
       )}
-
       {step === "yes" && <YesFlow onArrowClick={handleArrowClick} />}
-
       {step === "operation-select" && (
         <OperationSelection
           operations={AVAILABLE_OPERATIONS}
@@ -64,7 +59,6 @@ const AppointmentFlow: React.FC = () => {
           onBack={handleBack}
         />
       )}
-
       {step === "scheduler" && (
         <Scheduler selectedOperation={selectedOperation} />
       )}

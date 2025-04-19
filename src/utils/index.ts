@@ -8,9 +8,45 @@ interface EventDescription {
 }
 
 const getEventDescriptions = (
-  scheduleType: "gatorade-miralax" | "trilyte"
+  scheduleType: "egd" | "gatorade-miralax" | "trilyte"
 ): Record<string, EventDescription> => {
-  if (scheduleType === "gatorade-miralax") {
+  if (scheduleType === "egd") {
+    return {
+      twoWeeksPrior: {
+        title: "Two Weeks Prior - EGD Prep",
+        description:
+          "Read all instructions at-least 2 weeks prior to your procedure. If you do not follow the instructions you may have your procedure rescheduled. Stool must be clear to yellow at the time of the procedure.",
+      },
+      sevenDaysPrior: {
+        title: "Seven Days Prior - EGD Prep",
+        description: "STOP eating nuts, seeds, corn, or popcorn.",
+      },
+      fiveDaysPrior: {
+        title: "Five Days Prior - Medication Changes",
+        description:
+          "Stop (with provider approval): Aspirin (81 mg okay to continue), Vitamin E, iron, fish oil, other herbals, Aggrenox, Brilinta, Coumadin, Effient, Plavix. Call 417-875-3760 if unable to stop.",
+      },
+      fortyEightHoursPrior: {
+        title: "48 Hours Prior - Stop Blood Thinners",
+        description:
+          "Stop taking: Eliquis (Apixaban), Pradaxa (Dabigatran), Xarelto (Rivaroxban). All other daily medicines not listed can be taken with a sip of water at least 6 hours before procedure.",
+      },
+      dayOfProcedure: {
+        title: "Day of Procedure - Fasting",
+        description:
+          "Do NOT EAT anything after midnight. You may have CLEAR LIQUIDS until 6 hours before your procedure. Do NOT drink RED or PURPLE liquids.",
+      },
+      sixHoursPrior: {
+        title: "6 Hours Prior to Procedure",
+        description: "STOP all clear liquids.",
+      },
+      fourHoursPrior: {
+        title: "4 Hours Prior to Procedure",
+        description:
+          "Take your blood pressure medicine with a sip of water. If you are diabetic, talk to your doctor about medication changes for procedure day.",
+      },
+    };
+  } else if (scheduleType === "gatorade-miralax") {
     return {
       twoWeeksPrior: {
         title: "Two Weeks Prior - Gatorade/Miralax Prep",
@@ -123,7 +159,7 @@ const formatDateToICS = (dateArray: any) => {
 
 export const exportToICS = (
   dates: any,
-  scheduleType: "gatorade-miralax" | "trilyte" = "gatorade-miralax"
+  scheduleType: "egd" | "gatorade-miralax" | "trilyte" = "gatorade-miralax"
 ) => {
   const eventDescriptions = getEventDescriptions(scheduleType);
   let icsContent = [

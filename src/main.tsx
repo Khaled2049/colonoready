@@ -11,6 +11,7 @@ import RootLayout from "./routes/RootLayout.tsx";
 import AppointmentFlow from "./routes/AppointmentFlow";
 import GatoradeMiralax from "./routes/gatorade-miralax";
 import Trilyte from "./routes/trilyte";
+import EGDPrep from "./routes/egd-prep.tsx";
 
 const routes: RouteObject[] = [
   {
@@ -22,6 +23,11 @@ const routes: RouteObject[] = [
   {
     path: "/trilyte",
     element: <Trilyte />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/egd-prep",
+    element: <EGDPrep />,
     errorElement: <ErrorPage />,
   },
   {

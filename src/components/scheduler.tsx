@@ -15,6 +15,13 @@ interface SchedulerProps {
   selectedOperation?: Operation | null;
 }
 
+// Define procedure routes type for better type safety
+type ProcedureRoutes = {
+  [procedure: string]: {
+    [option: string]: string;
+  };
+};
+
 const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
   const operationName = selectedOperation?.name || "Colonoscopy";
   const [showNotificationsGuide, setShowNotificationsGuide] = useState(false);
@@ -30,7 +37,7 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
       setFormData({
         date: date.toISOString(),
         time: time.toISOString(),
-        option,
+        option: option || operationName, // Use operation name as option if no specific option selected
         procedure: operationName,
       });
       setShowNotificationsGuide(true);
@@ -40,25 +47,44 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
   };
 
   const handleNotificationsComplete = () => {
-    if (formData) {
-      if (operationName === "Colonoscopy") {
-        if (formData.option === "Trilyte") {
-          navigate("/trilyte", { state: formData });
-        } else if (formData.option === "Gatorade/Miralax") {
-          navigate("/gatorade-miralax", { state: formData });
-        }
-      } else {
-        navigate("/procedure-scheduled", {
-          state: {
-            date: formData.date,
-            time: formData.time,
-            procedure: operationName,
-          },
-        });
+    if (!formData) return;
+
+    // Define procedure routes mapping with proper typing
+    const procedureRoutes: ProcedureRoutes = {
+      Colonoscopy: {
+        Trilyte: "/trilyte",
+        "Gatorade/Miralax": "/gatorade-miralax",
+      },
+      "Egd Prep": {
+        "Egd Prep": "/egd-prep", // Uses the procedure name as the option
+      },
+    };
+
+    // Check if we have specific routes for this procedure with type checking
+    if (operationName in procedureRoutes) {
+      const option = formData.option || operationName;
+
+      // Type-safe access to the routes
+      const procedureOptions = procedureRoutes[operationName];
+
+      if (option in procedureOptions) {
+        const route = procedureOptions[option];
+        navigate(route, { state: formData });
+        return;
       }
     }
+
+    // Default fallback if no specific route is found
+    navigate("/procedure-scheduled", {
+      state: {
+        date: formData.date,
+        time: formData.time,
+        procedure: operationName,
+      },
+    });
   };
 
+  // Only show preparation options for Colonoscopy
   const showPreparationOptions = operationName === "Colonoscopy";
 
   if (showNotificationsGuide) {
@@ -155,6 +181,68 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
                         className="w-5 h-5"
                       />
                       <span className="ml-3">Gatorade/Miralax</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        {...field}
+                        value="Flexible Sigmoidoscopy"
+                        checked={field.value === "Flexible Sigmoidoscopy"}
+                        onChange={() =>
+                          field.onChange("Flexible Sigmoidoscopy")
+                        }
+                        className="w-5 h-5"
+                        disabled
+                      />
+                      <span className="ml-3">Flexible Sigmoidoscopy</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        {...field}
+                        value="Ileoscopy"
+                        checked={field.value === "Ileoscopy"}
+                        onChange={() => field.onChange("Ileoscopy")}
+                        className="w-5 h-5"
+                        disabled
+                      />
+                      <span className="ml-3">Ileoscopy</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        {...field}
+                        value="Pouchscopy"
+                        checked={field.value === "Pouchscopy"}
+                        onChange={() => field.onChange("Pouchscopy")}
+                        className="w-5 h-5"
+                        disabled
+                      />
+                      <span className="ml-3">Pouchscopy</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        {...field}
+                        value="ERCP"
+                        checked={field.value === "ERCP"}
+                        onChange={() => field.onChange("ERCP")}
+                        className="w-5 h-5"
+                        disabled
+                      />
+                      <span className="ml-3">ERCP</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        {...field}
+                        value="Endoscopic Ultrasound"
+                        checked={field.value === "Endoscopic Ultrasound"}
+                        onChange={() => field.onChange("Endoscopic Ultrasound")}
+                        className="w-5 h-5"
+                        disabled
+                      />
+                      <span className="ml-3">Endoscopic Ultrasound</span>
                     </label>
                   </div>
                 )}

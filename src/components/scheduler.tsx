@@ -3,11 +3,9 @@ import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import CalendarNotificationsGuide from "./CalendarNotificationsGuide";
 import { Operation } from "../routes/AppointmentFlow";
-import {
-  LocalizationProvider,
-  DatePicker,
-  TimePicker,
-} from "@mui/x-date-pickers";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 

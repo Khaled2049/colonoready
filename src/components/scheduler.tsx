@@ -1,105 +1,64 @@
-import React, { useState } from "react";
+import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import CalendarNotificationsGuide from "./CalendarNotificationsGuide";
-import { Operation } from "../routes/AppointmentFlow";
+// Remove useNavigate import from here
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
+import { Dayjs } from "dayjs";
+import { Operation } from "../types"; // Adjust path
 
 interface SchedulerProps {
-  selectedOperation?: Operation | null;
+  selectedOperation: Operation; // Should not be null here
+  onSubmit: (data: {
+    date: Dayjs | null;
+    time: Dayjs | null;
+    option?: string;
+  }) => void;
 }
 
-// Define procedure routes type for better type safety
-type ProcedureRoutes = {
-  [procedure: string]: {
-    [option: string]: string;
-  };
-};
+const Scheduler: React.FC<SchedulerProps> = ({
+  selectedOperation,
+  onSubmit,
+}) => {
+  const operationName = selectedOperation.name;
+  // Remove internal state management for navigation (showNotificationsGuide, formData)
 
-const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
-  const operationName = selectedOperation?.name || "Colonoscopy";
-  const [showNotificationsGuide, setShowNotificationsGuide] = useState(false);
-  const [formData, setFormData] = useState<any>(null);
+  const { control, handleSubmit } = useForm<{
+    date: Dayjs | null;
+    time: Dayjs | null;
+    option?: string;
+  }>({
+    defaultValues: {
+      date: null,
+      time: null,
+      // Set default prep option based on operation if needed
+      option: operationName === "Colonoscopy" ? "Trilyte" : undefined,
+    },
+  });
 
-  const { control, handleSubmit } = useForm();
-  const navigate = useNavigate();
-
-  const onSubmit = (data: any) => {
-    const { date, time, option } = data;
-
-    if (date && time) {
-      setFormData({
-        date: date.toISOString(),
-        time: time.toISOString(),
-        option: option || operationName, // Use operation name as option if no specific option selected
-        procedure: operationName,
-      });
-      setShowNotificationsGuide(true);
-    } else {
-      alert("Please select a date and time");
-    }
+  // No need for internal onSubmit redirecting; call the prop function
+  const handleFormSubmit = (data: {
+    date: Dayjs | null;
+    time: Dayjs | null;
+    option?: string;
+  }) => {
+    onSubmit(data); // Pass data up to the Page component
   };
 
-  const handleNotificationsComplete = () => {
-    if (!formData) return;
-
-    // Define procedure routes mapping with proper typing
-    const procedureRoutes: ProcedureRoutes = {
-      Colonoscopy: {
-        Trilyte: "/trilyte",
-        "Gatorade/Miralax": "/gatorade-miralax",
-      },
-      "Egd Prep": {
-        "Egd Prep": "/egd-prep", // Uses the procedure name as the option
-      },
-    };
-
-    // Check if we have specific routes for this procedure with type checking
-    if (operationName in procedureRoutes) {
-      const option = formData.option || operationName;
-
-      // Type-safe access to the routes
-      const procedureOptions = procedureRoutes[operationName];
-
-      if (option in procedureOptions) {
-        const route = procedureOptions[option];
-        navigate(route, { state: formData });
-        return;
-      }
-    }
-
-    // Default fallback if no specific route is found
-    navigate("/procedure-scheduled", {
-      state: {
-        date: formData.date,
-        time: formData.time,
-        procedure: operationName,
-      },
-    });
-  };
-
-  // Only show preparation options for Colonoscopy
+  // Only show preparation options for Colonoscopy (or others if configured)
   const showPreparationOptions = operationName === "Colonoscopy";
 
-  if (showNotificationsGuide) {
-    return (
-      <CalendarNotificationsGuide onComplete={handleNotificationsComplete} />
-    );
-  }
+  // Remove the conditional rendering for CalendarNotificationsGuide
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="max-w-2xl mx-auto p-6 bg-bg100 min-h-screen">
         <h1 className="text-3xl font-bold text-text100 text-center mb-8">
-          {operationName} Event Creator
+          Schedule Your {operationName}
         </h1>
-
         <form
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(handleFormSubmit)} // Use the new handler
           className="space-y-8 bg-primary200 rounded-xl shadow-lg p-8"
         >
           {/* Date Selection */}
@@ -110,16 +69,24 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
             <Controller
               control={control}
               name="date"
-              render={({ field }) => (
-                <DatePicker
-                  {...field}
-                  value={field.value ? dayjs(field.value) : null}
-                  onChange={(date) => field.onChange(date)}
-                  className="bg-bg200 rounded-lg"
-                  slotProps={{
-                    textField: { variant: "outlined", fullWidth: true },
-                  }}
-                />
+              rules={{ required: "Date is required" }} // Add validation
+              render={({ field, fieldState: { error } }) => (
+                <>
+                  <DatePicker
+                    {...field}
+                    value={field.value} // Already a Dayjs object or null
+                    onChange={(date) => field.onChange(date)}
+                    className="bg-bg200 rounded-lg w-full" // Ensure width
+                    slotProps={{
+                      textField: {
+                        variant: "outlined",
+                        fullWidth: true,
+                        error: !!error,
+                        helperText: error?.message,
+                      },
+                    }}
+                  />
+                </>
               )}
             />
           </div>
@@ -132,21 +99,29 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
             <Controller
               control={control}
               name="time"
-              render={({ field }) => (
-                <TimePicker
-                  {...field}
-                  className="bg-bg200 rounded-lg"
-                  value={field.value ? dayjs(field.value) : null}
-                  onChange={(time) => field.onChange(time)}
-                  slotProps={{
-                    textField: { variant: "outlined", fullWidth: true },
-                  }}
-                />
+              rules={{ required: "Time is required" }} // Add validation
+              render={({ field, fieldState: { error } }) => (
+                <>
+                  <TimePicker
+                    {...field}
+                    value={field.value}
+                    onChange={(time) => field.onChange(time)}
+                    className="bg-bg200 rounded-lg w-full" // Ensure width
+                    slotProps={{
+                      textField: {
+                        variant: "outlined",
+                        fullWidth: true,
+                        error: !!error,
+                        helperText: error?.message,
+                      },
+                    }}
+                  />
+                </>
               )}
             />
           </div>
 
-          {/* Preparation Option - Only show for Colonoscopy */}
+          {/* Preparation Option */}
           {showPreparationOptions && (
             <fieldset className="space-y-4">
               <legend className="text-lg font-medium text-text100 mb-4">
@@ -154,17 +129,19 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
               </legend>
               <Controller
                 control={control}
-                name="option"
-                defaultValue="Trilyte"
+                name="option" // Name matches form state
+                // defaultValue="Trilyte" // Set in useForm defaultValues
                 render={({ field }) => (
                   <div className="space-y-4">
+                    {/* Radio buttons for Trilyte and Gatorade/Miralax */}
+                    {/* Ensure value matches the string expected */}
                     <label className="flex items-center">
                       <input
                         type="radio"
                         {...field}
                         value="Trilyte"
                         checked={field.value === "Trilyte"}
-                        onChange={() => field.onChange("Trilyte")}
+                        onChange={() => field.onChange("Trilyte")} // Correct usage
                         className="w-5 h-5"
                       />
                       <span className="ml-3">Trilyte</span>

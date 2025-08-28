@@ -1,18 +1,69 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { CheckCircle } from "lucide-react";
-import { Operation } from "../routes/AppointmentFlow";
 
-interface OperationSelectionProps {
-  operations: Operation[];
-  onSelect: (operation: Operation) => void;
-  onBack: () => void;
+export interface Operation {
+  id: string;
+  name: string;
+  description?: string;
 }
 
-const OperationSelection: React.FC<OperationSelectionProps> = ({
-  operations,
-  onSelect,
-  onBack,
-}) => {
+const AVAILABLE_OPERATIONS: Operation[] = [
+  {
+    id: "colonoscopy",
+    name: "Colonoscopy",
+    description: "Examination of the large intestine using a flexible camera",
+  },
+  {
+    id: "egd",
+    name: "EGD",
+    description:
+      "Upper endoscopy examination of the esophagus, stomach, and duodenum",
+  },
+  {
+    id: "flexible-sigmoidoscopy",
+    name: "Flexible Sigmoidoscopy",
+    description:
+      "Examination of the lower part of the large intestine using a flexible camera.",
+  },
+  {
+    id: "ileoscopy",
+    name: "Ileoscopy",
+    description: "Examination of the ileum.",
+  },
+  {
+    id: "pouchscopy",
+    name: "Pouchscopy",
+    description:
+      "Examination of an ileal pouch-anal anastomosis (J-pouch) created after the surgical removal of the colon.",
+  },
+  {
+    id: "ercp",
+    name: "ERCP",
+    description:
+      "A procedure that combines upper gastrointestinal endoscopy and X-rays to diagnose and treat problems of the bile and pancreatic ducts.",
+  },
+  {
+    id: "endoscopic-ultrasound",
+    name: "Endoscopic Ultrasound",
+    description:
+      "A procedure that combines endoscopy with ultrasound to visualize the layers of the gastrointestinal tract and nearby organs.",
+  },
+];
+
+const OperationSelection: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleSelect = (operation: Operation) => {
+    navigate(`/appointments/operations/${operation.id}`, {
+      state: { operation },
+    });
+  };
+
+  const handleBack = () => {
+    navigate("/appointments");
+  };
+
   return (
     <div className="flex flex-col items-center p-4 bg-bg100 w-full max-w-md mx-auto">
       <div className="bg-bg200 p-5 rounded-lg shadow-md w-full mb-4 border border-primary300">
@@ -24,10 +75,10 @@ const OperationSelection: React.FC<OperationSelectionProps> = ({
         </p>
 
         <div className="space-y-3 bg-bg200">
-          {operations.map((operation) => (
+          {AVAILABLE_OPERATIONS.map((operation) => (
             <button
               key={operation.id}
-              onClick={() => onSelect(operation)}
+              onClick={() => handleSelect(operation)}
               className="w-full flex items-center p-4 border border-accent200 hover:bg-accent200/30 transition-colors"
             >
               <div className="flex-1 text-left ">
@@ -43,7 +94,7 @@ const OperationSelection: React.FC<OperationSelectionProps> = ({
           ))}
         </div>
         <button
-          onClick={onBack}
+          onClick={handleBack}
           className="w-full mt-4 mb-6 bg-primary300 text-white px-4 py-2 rounded-lg shadow-md hover:bg-accent200 focus:outline-none focus:ring-2 focus:ring-primary text-sm md:text-base"
         >
           Back

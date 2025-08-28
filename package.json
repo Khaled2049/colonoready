@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.45.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@fontsource/roboto": "^5.2.5",
@@ -22,8 +23,9 @@
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.13",
     "file-saver": "^2.0.5",
+    "framer-motion": "^12.23.12",
     "ics": "^3.7.6",
-    "lucide-react": "^0.474.0",
+    "lucide-react": "^0.542.0",
     "react": "^18.2.0",
     "react-datepicker": "^7.1.0",
     "react-dom": "^18.2.0",

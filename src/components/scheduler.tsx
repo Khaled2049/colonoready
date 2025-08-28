@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import CalendarNotificationsGuide from "./CalendarNotificationsGuide";
-import { Operation } from "../routes/AppointmentFlow";
+
 import {
   LocalizationProvider,
   DatePicker,
@@ -10,12 +10,12 @@ import {
 } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import { Operation } from "./OperationSelection";
 
 interface SchedulerProps {
   selectedOperation?: Operation | null;
 }
 
-// Define procedure routes type for better type safety
 type ProcedureRoutes = {
   [procedure: string]: {
     [option: string]: string;
@@ -37,7 +37,7 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
       setFormData({
         date: date.toISOString(),
         time: time.toISOString(),
-        option: option || operationName, // Use operation name as option if no specific option selected
+        option: option || operationName,
         procedure: operationName,
       });
       setShowNotificationsGuide(true);
@@ -49,22 +49,19 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
   const handleNotificationsComplete = () => {
     if (!formData) return;
 
-    // Define procedure routes mapping with proper typing
+    // Updated routes with /appointments prefix
     const procedureRoutes: ProcedureRoutes = {
       Colonoscopy: {
-        Trilyte: "/trilyte",
-        "Gatorade/Miralax": "/gatorade-miralax",
+        Trilyte: "/appointments/trilyte",
+        "Gatorade/Miralax": "/appointments/gatorade-miralax",
       },
       "Egd Prep": {
-        "Egd Prep": "/egd-prep", // Uses the procedure name as the option
+        "Egd Prep": "/appointments/egd-prep",
       },
     };
 
-    // Check if we have specific routes for this procedure with type checking
     if (operationName in procedureRoutes) {
       const option = formData.option || operationName;
-
-      // Type-safe access to the routes
       const procedureOptions = procedureRoutes[operationName];
 
       if (option in procedureOptions) {
@@ -74,8 +71,7 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
       }
     }
 
-    // Default fallback if no specific route is found
-    navigate("/procedure-scheduled", {
+    navigate("/appointments/procedure-scheduled", {
       state: {
         date: formData.date,
         time: formData.time,
@@ -84,7 +80,6 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
     });
   };
 
-  // Only show preparation options for Colonoscopy
   const showPreparationOptions = operationName === "Colonoscopy";
 
   if (showNotificationsGuide) {

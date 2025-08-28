@@ -1,16 +1,41 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-
-import { calculateDates, Dates, exportToICS } from "../../utils";
+import { format, subWeeks, subHours, subDays } from "date-fns";
+import { exportToICS } from "../utils";
 import { useReactToPrint } from "react-to-print";
-import { useAppointment } from "../../contexts/AppointmentContext";
-import dayjs from "dayjs";
 
-const GatoradeMiralaxPrepPage: React.FC = () => {
-  // Get data from context instead of location state
-  const { appointmentDate, appointmentTime, selectedOperation } =
-    useAppointment();
-  const navigate = useNavigate(); // Use navigate hook
+interface Dates {
+  twoWeeksPrior: string;
+  sixHoursPrior: string;
+  fourHoursPrior: string;
+  fiveDaysPrior: string;
+  fortyEightHoursPrior: string;
+  sevenDaysPrior: string;
+  threeDaysPrior: string;
+  oneDayPrior: string;
+  dayOfProcedure: string;
+}
+
+const calculateDates = (procedureDate: Date): Dates => {
+  return {
+    twoWeeksPrior: format(subWeeks(procedureDate, 2), "MM/dd/yyyy h:mm aa"),
+    sixHoursPrior: format(subHours(procedureDate, 6), "MM/dd/yyyy h:mm aa"),
+    fourHoursPrior: format(subHours(procedureDate, 4), "MM/dd/yyyy h:mm aa"),
+    fiveDaysPrior: format(subDays(procedureDate, 5), "MM/dd/yyyy h:mm aa"),
+    fortyEightHoursPrior: format(
+      subDays(procedureDate, 2),
+      "MM/dd/yyyy h:mm aa"
+    ),
+    sevenDaysPrior: format(subDays(procedureDate, 7), "MM/dd/yyyy h:mm aa"),
+    threeDaysPrior: format(subDays(procedureDate, 3), "MM/dd/yyyy h:mm aa"),
+    oneDayPrior: format(subDays(procedureDate, 1), "MM/dd/yyyy h:mm aa"),
+    dayOfProcedure: format(procedureDate, "MM/dd/yyyy h:mm aa"),
+  };
+};
+
+const GatoradeMiralax = () => {
+  const { state } = useLocation();
+  const { date, time } = state || {};
   const [dates, setDates] = useState<Dates | null>(null);
   const componentRef = useRef<HTMLDivElement>(null);
 
@@ -74,51 +99,23 @@ const GatoradeMiralaxPrepPage: React.FC = () => {
   });
 
   useEffect(() => {
-    // Check if Dayjs objects exist in context
-    if (
-      appointmentDate &&
-      dayjs.isDayjs(appointmentDate) &&
-      appointmentTime &&
-      dayjs.isDayjs(appointmentTime)
-    ) {
-      // Combine Dayjs date and time parts into a single Dayjs object, then convert to JS Date
-      // This assumes appointmentDate and appointmentTime represent the correct local date/time
-      const combinedDayjs = appointmentDate
-        .hour(appointmentTime.hour())
-        .minute(appointmentTime.minute())
-        .second(appointmentTime.second());
+    if (date && time) {
+      const selectedDate = new Date(date);
+      const selectedTime = new Date(time);
 
-      const combinedDateTime = combinedDayjs.toDate(); // Convert to standard JS Date
+      const combinedDateTime = new Date(
+        selectedDate.getFullYear(),
+        selectedDate.getMonth(),
+        selectedDate.getDate(),
+        selectedTime.getUTCHours() - 5,
+        selectedTime.getUTCMinutes(),
+        selectedTime.getUTCSeconds(),
+        selectedTime.getUTCMilliseconds()
+      );
 
       setDates(calculateDates(combinedDateTime));
-    } else {
-      // Handle case where date/time aren't set (e.g., redirect or show error)
-      console.warn(
-        "Appointment date/time not found in context. Redirecting..."
-      );
-      // Redirect back to an earlier step if data is missing
-      navigate("/schedule", { replace: true });
-      setDates(null); // Ensure dates are cleared if context data disappears
     }
-    // Depend on context values
-  }, [appointmentDate, appointmentTime]);
-
-  const handleExport = () => {
-    if (dates) {
-      // Pass operation name for better event naming
-      exportToICS(dates, "gatorade-miralax");
-    } else {
-      alert("Date information is not available to export.");
-    }
-  };
-
-  const handleBack = () => {
-    navigate(-1); // Use navigate for back action
-  };
-
-  // const handleGoHome = () => {
-  //   navigate("/"); // Navigate to the root/start page
-  // };
+  }, [date, time]);
 
   return (
     <div className="min-h-screen bg-bg100 flex items-center justify-center">
@@ -127,42 +124,32 @@ const GatoradeMiralaxPrepPage: React.FC = () => {
         className="w-full max-w-3xl mx-auto p-4 md:p-6 bg-bg100"
       >
         <h1 className="text-2xl md:text-3xl text-center font-bold mb-6 text-text100">
-          {selectedOperation?.name || "Procedure"} - Gatorade/Miralax Schedule{" "}
+          Gatorade/ Miralax Schedule
         </h1>
 
         {/* Control buttons at top */}
         <div className="flex flex-col sm:flex-row gap-2 mb-6">
           <button
             onClick={() => handlePrint()}
-            disabled={!dates} // Disable if dates aren't calculated yet
             className="flex-1 bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm md:text-base"
           >
             Download PDF
           </button>
           <button
-            onClick={() => handleExport()}
-            disabled={!dates} // Disable if dates aren't calculated yet
+            onClick={() => exportToICS(dates, "gatorade-miralax")}
             className="flex-1 bg-indigo-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base"
           >
             Export to Calendar
           </button>
         </div>
 
-        {/* Navigation Buttons */}
-        <div className="flex flex-col sm:flex-row gap-2 mb-6">
-          <button
-            onClick={handleBack}
-            className="w-full mb-6 bg-red-400 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm md:text-base"
-          >
-            Back
-          </button>
-          {/* <button
-            onClick={handleGoHome}
-            className="btn btn-primary flex-1" // Consistent style
-          >
-            Go Home
-          </button> */}
-        </div>
+        {/* Back button */}
+        <button
+          onClick={() => window.history.back()}
+          className="w-full mb-6 bg-red-400 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm md:text-base"
+        >
+          Back
+        </button>
 
         <div className="space-y-4 md:space-y-6">
           {dates?.twoWeeksPrior && (
@@ -358,4 +345,4 @@ const GatoradeMiralaxPrepPage: React.FC = () => {
   );
 };
 
-export default GatoradeMiralaxPrepPage;
+export default GatoradeMiralax;

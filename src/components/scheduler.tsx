@@ -11,6 +11,7 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { Operation } from "./OperationSelection";
+import { useUser } from "@clerk/clerk-react";
 
 interface SchedulerProps {
   selectedOperation?: Operation | null;
@@ -28,18 +29,25 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
   const [formData, setFormData] = useState<any>(null);
 
   const { control, handleSubmit } = useForm();
+  const { user, isLoaded } = useUser();
   const navigate = useNavigate();
 
   const onSubmit = (data: any) => {
     const { date, time, option } = data;
 
+    const formData = {
+      userId: user?.id,
+      userEmail: user?.primaryEmailAddress?.emailAddress,
+      date: date.toISOString(),
+      time: time.toISOString(),
+      option: option || operationName,
+      procedure: operationName,
+    };
+
+    console.log("formData", formData);
+
     if (date && time) {
-      setFormData({
-        date: date.toISOString(),
-        time: time.toISOString(),
-        option: option || operationName,
-        procedure: operationName,
-      });
+      setFormData(formData);
       setShowNotificationsGuide(true);
     } else {
       alert("Please select a date and time");
@@ -85,6 +93,17 @@ const Scheduler: React.FC<SchedulerProps> = ({ selectedOperation }) => {
   if (showNotificationsGuide) {
     return (
       <CalendarNotificationsGuide onComplete={handleNotificationsComplete} />
+    );
+  }
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-bg100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary300 mx-auto mb-4"></div>
+          <p className="text-text100">Loading...</p>
+        </div>
+      </div>
     );
   }
 

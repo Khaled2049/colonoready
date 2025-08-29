@@ -20,25 +20,12 @@ import SchedulerPage from "./routes/SchedulerPage.tsx";
 import AppLayout from "./routes/AppLayout.tsx";
 import AppointmentsDashboard from "./routes/AppointmentsDashboard.tsx";
 import ErrorPage from "./error-page.tsx";
-import { registerSW } from "virtual:pwa-register";
-import InstallPWA from "../src/components/InstallPwa";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key from .env.local");
 }
-
-// const updateSW = registerSW({
-//   onNeedRefresh() {
-//     if (confirm("New content available. Reload to update?")) {
-//       updateSW(true);
-//     }
-//   },
-//   onOfflineReady() {
-//     console.log("App ready to work offline");
-//   },
-// });
 
 const routes: RouteObject[] = [
   {
@@ -99,6 +86,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
       <RouterProvider router={router} />
     </ClerkProvider>
-    {/* <InstallPWA /> */}
   </React.StrictMode>
 );
